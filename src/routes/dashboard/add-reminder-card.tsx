@@ -10,52 +10,67 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import { CirclePlusIcon } from "lucide-react";
+import { z } from "zod";
 
-export default function AddReadingsCard() {
+const FormSchema = z.object({
+  value: z.coerce.number(),
+  date: z.coerce.date().default(() => new Date()),
+});
+
+export default function AddReminderCard() {
+  const { toast } = useToast();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Card className="w-[200px] h-[200px]">
           <CardContent className="h-full flex flex-col justify-center items-center gap-3">
-            <p>Add Readings</p>
+            <p>Add Reminder</p>
             <CirclePlusIcon />
           </CardContent>
         </Card>
       </DialogTrigger>
       <DialogContent className="w-full">
         <DialogHeader>
-          <DialogTitle>Add readings</DialogTitle>
-          <DialogDescription>Add meters reading below</DialogDescription>
+          <DialogTitle>Add reminder</DialogTitle>
+          <DialogDescription>
+            set reminder for your medication
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <form
+          className="grid gap-4 py-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = new FormData(e.currentTarget);
+            const payload = FormSchema.safeParse(
+              Object.fromEntries(form.entries()),
+            );
+
+            if (payload.success) {
+              alert(payload.data);
+            } else {
+              toast({ variant: "destructive", title: "unable to save" });
+            }
+          }}
+        >
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="value" className="text-right">
               value
             </Label>
             <Input
-              name="measurement"
+              name="value"
               id="value"
-              defaultValue="Pedro Duarte"
+              defaultValue="00.00"
               className="col-span-2"
               inputMode="numeric"
+              required
             />
             <p>mg/dL</p>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="date" className="text-right">
-              date
-            </Label>
-            <Input
-              name="date"
-              id="date"
-              defaultValue="@peduarte"
-              className="col-span-2"
-              type="date"
-            />
-          </div>
-        </div>
-        <Button type="submit">Save</Button>
+          <Button type="submit">Save</Button>
+        </form>
       </DialogContent>
     </Dialog>
   );
