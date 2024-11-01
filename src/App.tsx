@@ -7,8 +7,6 @@ import LoginPage from "./routes/login/page";
 import { authProvider } from "./lib/auth";
 import DashboardPage from "./routes/dashboard/page";
 import DashboardLayout from "./routes/dashboard/layout";
-import ProfilePage from "./routes/profile/page";
-import MeasurementPage from "./routes/measurement/page";
 
 const router = createBrowserRouter([
   {
@@ -28,11 +26,24 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        Component: ProfilePage,
+        lazy: async () => {
+          const ProfilePage = await import("./routes/profile/page");
+          return {
+            Component: ProfilePage.default,
+          };
+        },
       },
       {
         path: "measurement",
-        Component: MeasurementPage,
+        lazy: async () => {
+          const MeasuremenPage = await import("./routes/measurement/page");
+          const { loader } = await import("./routes/measurement/loader");
+
+          return {
+            Component: MeasuremenPage.default,
+            loader,
+          };
+        },
       },
     ],
   },
