@@ -8,7 +8,7 @@ import { authProvider } from "./lib/auth";
 import DashboardPage from "./routes/dashboard/page";
 import DashboardLayout from "./routes/dashboard/layout";
 import ProfilePage from "./routes/profile/page";
-import ReadingsPage from "./routes/readings/page";
+import MeasurementPage from "./routes/measurement/page";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +31,8 @@ const router = createBrowserRouter([
         Component: ProfilePage,
       },
       {
-        path: "readings",
-        Component: ReadingsPage,
+        path: "measurement",
+        Component: MeasurementPage,
       },
     ],
   },

@@ -6,11 +6,15 @@ import { cn } from "@/lib/utils";
 
 function BottomNav() {
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200">
+    <div className="fixed bottom-0 w-full bg-white border-t border-gray-200">
       <div className="flex justify-between px-6 py-3">
         {[
           { to: "/", title: "Dashboard", Icon: HouseIcon },
-          { to: "/readings", title: "Readings", Icon: TrendingUpDownIcon },
+          {
+            to: "/measurement",
+            title: "Measurement",
+            Icon: TrendingUpDownIcon,
+          },
           { to: "/profile", title: "Profile", Icon: UserPenIcon },
         ].map(({ to, title, Icon }, i) => {
           return (
@@ -35,10 +39,10 @@ function BottomNav() {
 
 export default function DashboardLayout() {
   return (
-    <div className="min-h-svh relative">
+    <>
       <Toaster />
       <Outlet />
       <BottomNav />
-    </div>
+    </>
   );
 }

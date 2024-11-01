@@ -4,4 +4,5 @@ export {
   TrendingUpDownIcon,
   UserPenIcon,
   LoaderCircleIcon,
+  EllipsisVerticalIcon,
 } from "lucide-react";
