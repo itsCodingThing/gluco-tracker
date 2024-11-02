@@ -41,7 +41,9 @@ export default function DashboardLayout() {
   return (
     <>
       <Toaster />
-      <Outlet />
+      <div className="pb-20">
+        <Outlet />
+      </div>
       <BottomNav />
     </>
   );

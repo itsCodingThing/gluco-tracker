@@ -5,4 +5,5 @@ export {
   UserPenIcon,
   LoaderCircleIcon,
   EllipsisVerticalIcon,
+  ChevronLeftIcon,
 } from "lucide-react";

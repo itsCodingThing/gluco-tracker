@@ -1,57 +1,53 @@
 import { app } from "./firebase";
-import { collection, addDoc, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  getFirestore,
+  getDocs,
+  query,
+  where,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { formatDate } from "./date";
-import { wait } from "./utils";
+import type { Measurement } from "@/types/measurement";
+import { z } from "zod";
 
 const firestore = getFirestore(app);
 const measurementCollection = collection(firestore, "measurements");
 
 export async function getMeasurements(userId: string) {
-  // const q = query(measurementCollection, where("userId", "==", userId));
-  // const querySnapshot = await getDocs(q);
-  const results: {
-    reading: string;
-    createdAt: string;
-    id: string;
-    status: string;
-  }[] = [];
+  const q = query(measurementCollection, where("userId", "==", userId));
+  const querySnapshot = await getDocs(q);
+  const results: Partial<Omit<Measurement, "userId">>[] = [];
 
-  const { faker } = await import("@faker-js/faker");
-
-  Array.from({ length: 1000 }).forEach(() => {
-    const reading = Math.floor(Math.random() * 500);
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
 
     results.push({
-      id: crypto.randomUUID() + "-" + userId,
-      reading: reading.toString(),
-      createdAt: formatDate(faker.date.past(), "dd/MM/yyyy"),
-      status: reading >= 150 ? "high" : reading <= 60 ? "low" : "normal",
+      id: doc.id,
+      measurement: data.measurement,
+      dosage: data.dosage,
+      createdAt: formatDate(data.createdAt, "dd/MM/yyyy"),
+      status: data.status,
     });
   });
 
-  await wait(1000);
   return results;
-
-  // querySnapshot.forEach((doc) => {
-  //   const data = doc.data();
-  //   results.push({
-  //     reading: data.reading,
-  //     createdAt: format(data.createdAt, "dd/mm/yyyy"),
-  //     id: doc.id,
-  //   });
-  // });
-  //
-  // return results;
 }
 
-export async function createNewMeasurement(payload: {
-  userId: string;
-  reading: string;
-  createdAt?: string;
-}) {
-  await addDoc(measurementCollection, {
-    userId: payload.userId,
-    reading: payload.reading,
-    createdAt: payload.createdAt ?? new Date().toISOString(),
-  });
+const CreateMeasurementSchema = z.object({
+  userId: z.string(),
+  measurement: z.number(),
+  dosage: z.number(),
+  type: z.string(),
+  createdAt: z.string().default(() => new Date().toISOString()),
+  description: z.string().default(""),
+});
+export type CreateMeasurementInput = z.input<typeof CreateMeasurementSchema>;
+export async function createNewMeasurement(payload: CreateMeasurementInput) {
+  const data = await CreateMeasurementSchema.parseAsync(payload);
+  const docRef = doc(measurementCollection);
+
+  const saveData: Measurement = { id: docRef.id, status: "normal", ...data };
+  await setDoc(docRef, saveData);
 }

@@ -1,15 +1,13 @@
-import { lazy, Suspense } from "react";
 import Header from "./header";
 import { formatDate } from "date-fns";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import Loader from "@/components/loader";
+import { CirclePlusIcon } from "@/components/icons";
+import { Link } from "react-router-dom";
 
 const latestMeasurement = {
   measurement: 123,
   createdAt: new Date().toISOString(),
 };
-
-const AddMeasurementCard = lazy(() => import("./add-measurement-card"));
 
 export default function DashboardPage() {
   return (
@@ -33,9 +31,14 @@ export default function DashboardPage() {
         </Card>
       </div>
       <div className="mt-10 grid place-items-center gap-2">
-        <Suspense fallback={<Loader />}>
-          <AddMeasurementCard />
-        </Suspense>
+        <Link to="add-measurement">
+          <Card className="w-[200px] h-[200px]">
+            <CardContent className="h-full flex flex-col justify-center items-center gap-3">
+              <p>Add Readings</p>
+              <CirclePlusIcon />
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

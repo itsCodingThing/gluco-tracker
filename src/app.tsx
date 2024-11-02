@@ -1,28 +1,31 @@
-import {
-  createBrowserRouter,
-  redirect,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./routes/login/page";
-import { authProvider } from "./lib/auth";
 import DashboardPage from "./routes/dashboard/page";
 import DashboardLayout from "./routes/dashboard/layout";
+import dashboardPageLoader from "./routes/dashboard/loader";
 
 const router = createBrowserRouter([
   {
+    id: "root",
     path: "/",
-    loader: () => {
-      if (!authProvider.isAuthenticated) {
-        return redirect("/login");
-      }
-
-      return null;
-    },
+    loader: dashboardPageLoader,
     Component: DashboardLayout,
     children: [
       {
         index: true,
         Component: DashboardPage,
+      },
+      {
+        path: "add-measurement",
+        lazy: async () => {
+          const AddMeasurementPage = await import(
+            "./routes/add-measurement/page"
+          );
+
+          return {
+            Component: AddMeasurementPage.default,
+          };
+        },
       },
       {
         path: "profile",
@@ -37,11 +40,13 @@ const router = createBrowserRouter([
         path: "measurement",
         lazy: async () => {
           const MeasuremenPage = await import("./routes/measurement/page");
-          const { loader } = await import("./routes/measurement/loader");
+          const { measurementPageLoader } = await import(
+            "./routes/measurement/loader"
+          );
 
           return {
             Component: MeasuremenPage.default,
-            loader,
+            loader: measurementPageLoader,
           };
         },
       },

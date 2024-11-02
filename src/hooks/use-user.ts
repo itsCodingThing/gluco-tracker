@@ -1,19 +1,8 @@
-import { useLocalStorage } from "react-use";
+import type { UserData } from "@/lib/storage";
+import { useRouteLoaderData } from "react-router-dom";
 
-interface UserData {
-  name: string;
-  img: string;
-  id: string;
-  email: string;
-}
+export function useUser() {
+  const user = useRouteLoaderData("root") as UserData;
 
-export default function useUser(): { user?: UserData } {
-  const [data] = useLocalStorage<UserData>("user", {
-    name: "",
-    img: "",
-    id: "",
-    email: "",
-  });
-
-  return { user: data };
+  return user;
 }
