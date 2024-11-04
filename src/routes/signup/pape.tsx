@@ -1,22 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { signin } from "@/lib/auth";
 import { Label } from "@/components/ui/label";
+import { signup } from "@/lib/auth";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const navigate = useNavigate();
 
   return (
     <div className="container mx-auto py-1 px-2">
-      <h1 className="text-3xl text-center font-bold mb-5">Login</h1>
+      <h1 className="text-3xl text-center font-bold mb-5">Signup</h1>
       <form
         className="grid gap-5"
         onSubmit={async (e) => {
           e.preventDefault();
           const formdata = new FormData(e.currentTarget);
 
-          await signin({
+          await signup({
+            name: (formdata.get("name") as string) ?? "",
             email: (formdata.get("email") as string) ?? "",
             password: (formdata.get("password") as string) ?? "",
           });
@@ -24,12 +25,23 @@ export default function LoginPage() {
         }}
       >
         <div>
-          <Label htmlFor="name">Email</Label>
+          <Label htmlFor="name">Name</Label>
           <Input
             id="name"
             className="mt-1"
+            name="name"
+            placeholder="Enter your name"
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            className="mt-1"
             name="email"
             placeholder="Enter your email"
+            type="email"
             required
           />
         </div>
@@ -44,10 +56,10 @@ export default function LoginPage() {
             required
           />
         </div>
-        <Button type="submit">Login</Button>
+        <Button type="submit">Signup</Button>
       </form>
-      <Link className="mt-4" to="/signup">
-        don't have account
+      <Link className="mt-4" to="/login">
+        already have a account
       </Link>
     </div>
   );

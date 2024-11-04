@@ -3,6 +3,7 @@ import LoginPage from "./routes/login/page";
 import DashboardPage from "./routes/dashboard/page";
 import DashboardLayout from "./routes/dashboard/layout";
 import dashboardPageLoader from "./routes/dashboard/loader";
+import SignupPage from "./routes/signup/pape";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage,
+  },
+  {
+    path: "/signup",
+    Component: SignupPage,
   },
 ]);
 
