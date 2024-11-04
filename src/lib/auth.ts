@@ -6,7 +6,7 @@ import {
   connectAuthEmulator,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { storage } from "./storage";
+import { removeStoreData, storeUserData } from "./storage";
 import { z } from "zod";
 
 const auth = getAuth(app);
@@ -30,7 +30,7 @@ export async function signup(payload: SignupPayloadInput) {
     verifiedPayload.email,
     verifiedPayload.password,
   );
-  await storage.storeUserData({
+  await storeUserData({
     userId: result.user.uid,
     isAuthenticated: true,
   });
@@ -49,7 +49,7 @@ export async function signin(payload: SigninPayloadInput) {
     verifiedPayload.email,
     verifiedPayload.password,
   );
-  await storage.storeUserData({
+  await storeUserData({
     userId: result.user.uid,
     isAuthenticated: true,
   });
@@ -57,5 +57,5 @@ export async function signin(payload: SigninPayloadInput) {
 
 export async function signout() {
   await signOut(auth);
-  storage.removeStoreData();
+  removeStoreData();
 }
