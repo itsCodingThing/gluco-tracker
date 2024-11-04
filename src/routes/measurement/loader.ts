@@ -1,4 +1,4 @@
-import { getMeasurements } from "@/lib/db";
+import { getMeasurements } from "@/lib/firestore";
 import { storage } from "@/lib/storage";
 import { defer } from "react-router-dom";
 
