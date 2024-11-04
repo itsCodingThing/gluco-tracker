@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore";
 import { formatDate } from "./date";
 import type { Measurement } from "@/types/measurement";
-import { z } from "zod";
 
 const firestore = getFirestore(app);
 
@@ -41,19 +40,16 @@ export async function getMeasurements(userId: string) {
   return results;
 }
 
-const CreateMeasurementSchema = z.object({
-  userId: z.string(),
-  measurement: z.number(),
-  dosage: z.number(),
-  type: z.string(),
-  createdAt: z.string().default(() => new Date().toISOString()),
-  description: z.string().default(""),
-});
-export type CreateMeasurementInput = z.input<typeof CreateMeasurementSchema>;
-export async function createNewMeasurement(payload: CreateMeasurementInput) {
-  const data = await CreateMeasurementSchema.parseAsync(payload);
+type MeasurementPayload = Partial<
+  Omit<Measurement, "id" | "userId" | "measurement">
+> & {
+  userId: string;
+  dosage: number;
+  measurement: number;
+};
+export async function createNewMeasurement(payload: MeasurementPayload) {
   const docRef = doc(measurementCollection);
 
-  const saveData: Measurement = { id: docRef.id, status: "normal", ...data };
+  const saveData = { id: docRef.id, status: "normal", ...payload };
   await setDoc(docRef, saveData);
 }

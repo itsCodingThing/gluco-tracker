@@ -7,20 +7,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUser } from "@/hooks/use-user";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import { createNewMeasurement } from "@/lib/firestore";
-import type { CreateMeasurementInput } from "@/lib/firestore";
-import { useToast } from "@/hooks/use-toast";
 import { ChevronLeftIcon } from "@/components/icons";
-import { Link } from "react-router-dom";
+import { Form, Link, useActionData } from "react-router-dom";
+import type { Response } from "@/lib/response";
 
 export default function AddMeasurementPage() {
-  const { userId } = useUser();
-  const { toast } = useToast();
+  const response = useActionData() as Response | null;
 
   return (
     <div className="min-h-svh container mx-auto p-2">
@@ -32,33 +28,7 @@ export default function AddMeasurementPage() {
           Add Measurement
         </h1>
       </div>
-      <form
-        className="grid grid-cols-4 gap-3"
-        onSubmit={async (e) => {
-          e.preventDefault();
-
-          const form = e.currentTarget;
-          const formdata = new FormData(form);
-          const payload: CreateMeasurementInput = {
-            ...Object.fromEntries(formdata),
-            userId,
-            measurement: Number(formdata.get("measurement") ?? 0),
-            type: (formdata.get("type") as string) ?? "",
-            dosage: Number(formdata.get("dosage") ?? 0),
-          };
-
-          try {
-            await createNewMeasurement(payload);
-            toast({ title: "Added successfully." });
-          } catch (error) {
-            toast({
-              title: "failed to upload. Check entered data",
-              variant: "destructive",
-            });
-            console.log(error);
-          }
-        }}
-      >
+      <Form method="post" className="grid grid-cols-4 gap-3">
         <div className="col-span-2">
           <Label htmlFor="measurement" className="text-left">
             measurement
@@ -132,7 +102,10 @@ export default function AddMeasurementPage() {
         <Button type="submit" className="col-span-4">
           Save
         </Button>
-      </form>
+        {response ? (
+          <>{!response.status ? <p>{response.msg}</p> : null}</>
+        ) : null}
+      </Form>
     </div>
   );
 }

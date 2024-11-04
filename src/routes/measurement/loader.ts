@@ -1,5 +1,5 @@
 import { getMeasurements } from "@/lib/firestore";
-import { storage } from "@/lib/storage";
+import { getUserData } from "@/lib/storage";
 import { defer } from "react-router-dom";
 
 export interface PageLoaderData {
@@ -8,7 +8,7 @@ export interface PageLoaderData {
 export type AwaitedLoaderData = Awaited<ReturnType<typeof getMeasurements>>;
 
 export async function measurementPageLoader() {
-  const user = await storage.getUserData();
+  const user = await getUserData();
 
   return defer({
     measurements: getMeasurements(user.userId),

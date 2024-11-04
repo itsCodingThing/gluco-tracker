@@ -4,6 +4,8 @@ import DashboardPage from "./routes/dashboard/page";
 import DashboardLayout from "./routes/dashboard/layout";
 import dashboardPageLoader from "./routes/dashboard/loader";
 import SignupPage from "./routes/signup/pape";
+import { loginAction } from "./routes/login/action";
+import { signupAction } from "./routes/signup/action";
 
 const router = createBrowserRouter([
   {
@@ -22,9 +24,13 @@ const router = createBrowserRouter([
           const AddMeasurementPage = await import(
             "./routes/add-measurement/page"
           );
+          const { addMeasurementAction } = await import(
+            "./routes/add-measurement/action"
+          );
 
           return {
             Component: AddMeasurementPage.default,
+            action: addMeasurementAction,
           };
         },
       },
@@ -55,10 +61,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
+    action: loginAction,
     Component: LoginPage,
   },
   {
     path: "/signup",
+    action: signupAction,
     Component: SignupPage,
   },
 ]);
