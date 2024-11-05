@@ -7,7 +7,7 @@ import {
 
 export const firestore = getFirestore(app);
 
-if (import.meta.env.MODE === "development" && import.meta.env.DEV) {
+if (import.meta.env.MODE === "development") {
   connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
 }
 

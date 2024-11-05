@@ -93,15 +93,18 @@ export function TimePicker({
   );
 }
 
-export function DatePicker({
-  showIcon = true,
-  clock,
-  onSelect,
-}: {
+interface DatePickerProps {
+  hiddenInput?: boolean;
   showIcon?: boolean;
   clock?: boolean;
   onSelect?: (date: Date) => void;
-}) {
+}
+export function DatePicker({
+  hiddenInput = false,
+  showIcon = true,
+  clock,
+  onSelect,
+}: DatePickerProps) {
   const [date, setDate] = useState<Date>(new Date());
 
   const onSelectDate = (d: Date) => {
@@ -110,31 +113,36 @@ export function DatePicker({
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
-          )}
-        >
-          {showIcon && <CalendarIcon className="mr-2 h-4 w-4" />}
-          {date ? format(date, "dd:MM:yy hh:mm a") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        {clock && <TimePicker date={date} onSelect={onSelectDate} />}
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(d) => {
-            if (d) {
-              onSelectDate(d);
-            }
-          }}
-        />
-      </PopoverContent>
-    </Popover>
+    <>
+      {hiddenInput ? (
+        <input name="date" type="hidden" defaultValue={date.toISOString()} />
+      ) : null}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-full justify-start text-left font-normal",
+              !date && "text-muted-foreground",
+            )}
+          >
+            {showIcon && <CalendarIcon className="mr-2 h-4 w-4" />}
+            {date ? format(date, "dd:MM:yy hh:mm a") : <span>Pick a date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          {clock && <TimePicker date={date} onSelect={onSelectDate} />}
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(d) => {
+              if (d) {
+                onSelectDate(d);
+              }
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    </>
   );
 }

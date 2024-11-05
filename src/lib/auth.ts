@@ -10,10 +10,10 @@ import { removeStoreData, storeUserData } from "./storage";
 import { z } from "zod";
 import { createProfile } from "./firestore/profile";
 
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 // development mode for firebase emulator
-if (import.meta.env.MODE === "development" && import.meta.env.DEV) {
+if (import.meta.env.MODE === "development") {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
 }
 

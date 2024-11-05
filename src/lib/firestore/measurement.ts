@@ -1,7 +1,15 @@
 import { Measurement } from "@/types/measurement";
 import { MeasurementDetails } from "@/types/measurement-details";
 import { formatDate } from "date-fns";
-import { query, where, getDocs, runTransaction, doc } from "firebase/firestore";
+import {
+  query,
+  where,
+  getDocs,
+  runTransaction,
+  doc,
+  orderBy,
+  limit,
+} from "firebase/firestore";
 import {
   firestore,
   measurementCollection,
@@ -9,7 +17,12 @@ import {
 } from "./firestore";
 
 export async function getMeasurements(userId: string) {
-  const q = query(measurementCollection, where("userId", "==", userId));
+  const q = query(
+    measurementCollection,
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc"),
+    limit(100),
+  );
   const querySnapshot = await getDocs(q);
   const results: Partial<Omit<Measurement, "userId">>[] = [];
 

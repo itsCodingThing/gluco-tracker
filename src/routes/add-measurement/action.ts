@@ -21,8 +21,11 @@ export async function addMeasurementAction({ request }: ActionFunctionArgs) {
   try {
     const user = await getUserData();
     const formdata = await request.formData();
+    const formPayload = Object.fromEntries(formdata);
+
     const data = await CreateMeasurementSchema.parseAsync({
-      ...Object.fromEntries(formdata),
+      ...formPayload,
+      createdAt: formdata.get("date"),
       userId: user.userId,
     });
     await createNewMeasurement({ ...data });

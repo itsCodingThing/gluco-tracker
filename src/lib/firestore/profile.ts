@@ -17,6 +17,8 @@ export async function createProfile(payload: Omit<Profile, "id">) {
     userId: payload.userId,
   };
   await setDoc(docRef, saveData);
+
+  return docRef.id;
 }
 
 export async function getProfile(userId: string) {

@@ -68,7 +68,7 @@ export default function AddMeasurementPage() {
             date
           </Label>
           <div className="flex w-full items-center space-x-2">
-            <DatePicker clock />
+            <DatePicker clock hiddenInput />
           </div>
         </div>
         <div className="col-span-2">
