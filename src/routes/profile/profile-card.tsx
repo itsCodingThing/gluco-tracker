@@ -40,7 +40,7 @@ export default function ProfileCard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex items-center">
                 <CalendarIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-                <span>DOB: 15/05/1980 (43 years)</span>
+                <span>DOB: {profile.dob}</span>
               </div>
               <div className="flex items-center">
                 <PhoneIcon className="w-4 h-4 mr-2 text-muted-foreground" />
@@ -55,11 +55,31 @@ export default function ProfileCard() {
         </div>
       </CardContent>
       <CardFooter className="flex gap-2 justify-end">
-        <Button variant="outline">Share</Button>
-        <Button variant="outline">
-          <UserPenIcon />
-          <Link to="/profile/edit">Edit</Link>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const profileLink = { url: "/profile" };
+
+            if (navigator.canShare(profileLink)) {
+              navigator
+                .share(profileLink)
+                .then(() => {
+                  console.log("share");
+                })
+                .catch(() => {
+                  console.log("unable to share");
+                });
+            }
+          }}
+        >
+          Share
         </Button>
+        <Link to="/profile/edit">
+          <Button variant="outline">
+            <UserPenIcon />
+            Edit
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

@@ -26,7 +26,7 @@ export default function EditProfile() {
           <ChevronLeftIcon />
         </Link>
         <h1 className="w-full text-center font-bold text-xl mb-3">
-          Add Measurement
+          Edit Profile
         </h1>
       </div>
       <Form method="post" className="grid grid-cols-2 gap-4 py-4">

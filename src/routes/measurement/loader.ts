@@ -2,9 +2,9 @@ import { getMeasurements } from "@/lib/firestore";
 import { getUserData } from "@/lib/storage";
 import { defer } from "react-router-dom";
 
-type AwaitedLoaderData = Awaited<ReturnType<typeof getMeasurements>>;
+export type MeasurementLoaderData = Awaited<ReturnType<typeof getMeasurements>>;
 export interface MeasurementPageLoaderData {
-  measurements: AwaitedLoaderData;
+  measurements: MeasurementLoaderData;
 }
 
 export async function measurementLoader() {

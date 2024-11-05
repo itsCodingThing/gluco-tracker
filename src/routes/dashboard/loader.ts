@@ -1,5 +1,11 @@
+import { getMeasurementDetailsByUserId } from "@/lib/firestore/measurement-details";
 import { getUserData } from "@/lib/storage";
-import { redirect } from "react-router-dom";
+import { defer, redirect } from "react-router-dom";
+
+export interface DashboardPageLoaderData {
+  user: ReturnType<typeof getUserData>;
+  measurementDetails: Awaited<ReturnType<typeof getMeasurementDetailsByUserId>>;
+}
 
 export default async function dashboardPageLoader() {
   try {
@@ -9,7 +15,14 @@ export default async function dashboardPageLoader() {
       return redirect("/login");
     }
 
-    return result;
+    const measurementDetails = await getMeasurementDetailsByUserId(
+      result.userId,
+    );
+
+    return defer({
+      user: result,
+      measurementDetails,
+    });
   } catch {
     return redirect("/login");
   }

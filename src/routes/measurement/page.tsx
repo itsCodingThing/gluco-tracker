@@ -10,14 +10,11 @@ import {
 import { Suspense } from "react";
 import Loader from "@/components/loader";
 import { MeasurementChart } from "./chart";
-import { MeasurementPageLoaderData } from "./loader";
+import { MeasurementLoaderData, MeasurementPageLoaderData } from "./loader";
 import { Await, useAsyncValue, useLoaderData } from "react-router-dom";
 
 function MeasurementTable() {
-  const data = useAsyncValue() as Pick<
-    MeasurementPageLoaderData,
-    "measurements"
-  >;
+  const data = useAsyncValue() as MeasurementLoaderData;
 
   return (
     <Table>
