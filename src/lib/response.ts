@@ -1,4 +1,4 @@
-export interface Response<T = unknown> {
+export interface ActionResponse<T = unknown> {
   msg: string;
   status: boolean;
   data: T;
@@ -10,9 +10,9 @@ interface ResponsePayload<T = unknown> {
   data?: T;
 }
 
-export function createResponse<T = string>(
+export function createActionResponse<T = string>(
   props: ResponsePayload<T>,
-): Response {
+): ActionResponse {
   return {
     msg: props.msg ?? "",
     status: props.status ?? true,

@@ -6,6 +6,7 @@ import dashboardPageLoader from "./routes/dashboard/loader";
 import SignupPage from "./routes/signup/pape";
 import { loginAction } from "./routes/login/action";
 import { signupAction } from "./routes/signup/action";
+import { profilePageLoader } from "./routes/profile/loader";
 
 const router = createBrowserRouter([
   {
@@ -35,25 +36,49 @@ const router = createBrowserRouter([
         },
       },
       {
+        id: "profile",
         path: "profile",
-        lazy: async () => {
-          const ProfilePage = await import("./routes/profile/page");
-          return {
-            Component: ProfilePage.default,
-          };
-        },
+        loader: profilePageLoader,
+        children: [
+          {
+            index: true,
+            lazy: async () => {
+              const ProfilePage = await import("./routes/profile/page");
+
+              return {
+                Component: ProfilePage.default,
+              };
+            },
+          },
+          {
+            path: "edit",
+            lazy: async () => {
+              const EditProfilePage = await import(
+                "./routes/profile/edit/page"
+              );
+              const { editProfileAction } = await import(
+                "./routes/profile/edit/action"
+              );
+
+              return {
+                Component: EditProfilePage.default,
+                action: editProfileAction,
+              };
+            },
+          },
+        ],
       },
       {
         path: "measurement",
         lazy: async () => {
           const MeasuremenPage = await import("./routes/measurement/page");
-          const { measurementPageLoader } = await import(
+          const { measurementLoader } = await import(
             "./routes/measurement/loader"
           );
 
           return {
             Component: MeasuremenPage.default,
-            loader: measurementPageLoader,
+            loader: measurementLoader,
           };
         },
       },

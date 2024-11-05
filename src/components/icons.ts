@@ -6,4 +6,12 @@ export {
   LoaderCircleIcon,
   EllipsisVerticalIcon,
   ChevronLeftIcon,
+  CalendarIcon,
+  PhoneIcon,
+  FileTextIcon,
+  ActivityIcon,
+  UserIcon,
+  ClipboardIcon,
+  LogOutIcon,
+  CloudUploadIcon,
 } from "lucide-react";

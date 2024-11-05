@@ -1,10 +1,10 @@
 import { signin } from "@/lib/auth";
-import { createResponse } from "@/lib/response";
+import { createActionResponse } from "@/lib/response";
 import { ActionFunctionArgs, json, redirect } from "react-router-dom";
 
 export async function loginAction({ request }: ActionFunctionArgs) {
   if (request.method !== "POST") {
-    return json(createResponse({ msg: "invalid form method" }));
+    return json(createActionResponse({ msg: "invalid form method" }));
   }
 
   const formdata = await request.formData();
@@ -17,6 +17,6 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 
     return redirect("/profile");
   } catch {
-    return json(createResponse({ msg: "login failed" }));
+    return json(createActionResponse({ msg: "login failed" }));
   }
 }

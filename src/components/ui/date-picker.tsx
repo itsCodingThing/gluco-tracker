@@ -94,9 +94,11 @@ export function TimePicker({
 }
 
 export function DatePicker({
+  showIcon = true,
   clock,
   onSelect,
 }: {
+  showIcon?: boolean;
   clock?: boolean;
   onSelect?: (date: Date) => void;
 }) {
@@ -113,11 +115,11 @@ export function DatePicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground",
           )}
         >
-          {!date && <CalendarIcon className="mr-2 h-4 w-4" />}
+          {showIcon && <CalendarIcon className="mr-2 h-4 w-4" />}
           {date ? format(date, "dd:MM:yy hh:mm a") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>

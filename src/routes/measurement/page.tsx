@@ -10,11 +10,14 @@ import {
 import { Suspense } from "react";
 import Loader from "@/components/loader";
 import { MeasurementChart } from "./chart";
-import { AwaitedLoaderData, PageLoaderData } from "./loader";
+import { MeasurementPageLoaderData } from "./loader";
 import { Await, useAsyncValue, useLoaderData } from "react-router-dom";
 
 function MeasurementTable() {
-  const data = useAsyncValue() as AwaitedLoaderData;
+  const data = useAsyncValue() as Pick<
+    MeasurementPageLoaderData,
+    "measurements"
+  >;
 
   return (
     <Table>
@@ -46,7 +49,7 @@ function MeasurementTable() {
 }
 
 export default function MeasurementPage() {
-  const data = useLoaderData() as PageLoaderData;
+  const data = useLoaderData() as MeasurementPageLoaderData;
 
   return (
     <div className="container mx-auto grid">

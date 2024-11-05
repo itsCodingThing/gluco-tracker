@@ -12,11 +12,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { ChevronLeftIcon } from "@/components/icons";
-import { Form, Link, useActionData } from "react-router-dom";
-import type { Response } from "@/lib/response";
+import { Form, Link, useActionData, useNavigation } from "react-router-dom";
+import type { ActionResponse } from "@/lib/response";
+import Loader from "@/components/loader";
 
 export default function AddMeasurementPage() {
-  const response = useActionData() as Response | null;
+  const navigation = useNavigation();
+  const response = useActionData() as ActionResponse | null;
 
   return (
     <div className="min-h-svh container mx-auto p-2">
@@ -100,7 +102,7 @@ export default function AddMeasurementPage() {
           />
         </div>
         <Button type="submit" className="col-span-4">
-          Save
+          {navigation.state === "submitting" ? <Loader /> : "Save"}
         </Button>
         {response ? (
           <>{!response.status ? <p>{response.msg}</p> : null}</>
