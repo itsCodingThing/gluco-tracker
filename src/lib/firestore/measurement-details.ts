@@ -1,5 +1,5 @@
 import { getDocs, query, where } from "firebase/firestore";
-import { measurementDetailsCollection } from "../firestore";
+import { measurementDetailsCollection } from "./firestore";
 import { MeasurementDetails } from "@/types/measurement-details";
 
 export async function getMeasurementDetailsByUserId(userId: string) {

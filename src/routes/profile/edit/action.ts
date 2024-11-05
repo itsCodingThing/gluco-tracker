@@ -1,4 +1,4 @@
-import { updateProfileByUserId } from "@/lib/firestore";
+import { updateProfileByUserId } from "@/lib/firestore/profile";
 import { getUserData } from "@/lib/storage";
 import { ActionFunctionArgs, json } from "react-router-dom";
 

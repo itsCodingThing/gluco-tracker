@@ -1,4 +1,4 @@
-import { createNewMeasurement } from "@/lib/firestore";
+import { createNewMeasurement } from "@/lib/firestore/measurement";
 import { createActionResponse } from "@/lib/response";
 import { getUserData } from "@/lib/storage";
 import { ActionFunctionArgs, json, redirect } from "react-router-dom";

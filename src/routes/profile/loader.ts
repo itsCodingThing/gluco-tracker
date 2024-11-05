@@ -1,4 +1,4 @@
-import { getProfile } from "@/lib/firestore";
+import { getProfile } from "@/lib/firestore/profile";
 import { getUserData } from "@/lib/storage";
 import { defer } from "react-router-dom";
 

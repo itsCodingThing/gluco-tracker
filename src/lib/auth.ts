@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import { removeStoreData, storeUserData } from "./storage";
 import { z } from "zod";
-import { createProfile } from "./firestore";
+import { createProfile } from "./firestore/profile";
 
 const auth = getAuth(app);
 
