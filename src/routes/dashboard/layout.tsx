@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Outlet } from "react-router-dom";
@@ -42,7 +43,9 @@ export default function DashboardLayout() {
     <>
       <Toaster />
       <div className="pb-20">
-        <Outlet />
+        <AnimatePresence>
+          <Outlet />
+        </AnimatePresence>
       </div>
       <BottomNav />
     </>
