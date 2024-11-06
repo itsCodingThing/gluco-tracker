@@ -14,7 +14,9 @@ export default function MeasurementPage() {
       <div className="container mx-auto grid">
         <Suspense fallback={<Loader />}>
           <Await resolve={data.measurements}>
-            <MeasurementTable />
+            <div className="p-2">
+              <MeasurementTable />
+            </div>
           </Await>
         </Suspense>
       </div>

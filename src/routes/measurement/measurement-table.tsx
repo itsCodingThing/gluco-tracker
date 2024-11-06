@@ -134,7 +134,6 @@ export default function MeasurementTable() {
             <TableHead>Reading</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Dosage</TableHead>
-            <TableHead className="w-[100px]">Type</TableHead>
             <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
@@ -147,14 +146,13 @@ export default function MeasurementTable() {
                 </TableCell>
                 <TableCell>{result.status}</TableCell>
                 <TableCell>{result.dosage}</TableCell>
-                <TableCell className="w-[100px]">{result.type}</TableCell>
                 <TableCell>{result.createdAt}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 py-4 px-2">
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
