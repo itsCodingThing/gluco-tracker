@@ -34,6 +34,7 @@ export async function getMeasurements(userId: string) {
       measurement: data.measurement,
       dosage: data.dosage,
       createdAt: formatDate(data.createdAt, "dd/MM/yyyy"),
+      type: data.type,
       status: data.status,
     });
   });

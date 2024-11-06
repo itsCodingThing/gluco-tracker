@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import Loader from "@/components/loader";
-import { MeasurementChart } from "./chart";
 import { MeasurementPageLoaderData } from "./loader";
 import { Await, useLoaderData } from "react-router-dom";
 import PageTransition from "@/components/page-transition";
@@ -13,7 +12,6 @@ export default function MeasurementPage() {
   return (
     <PageTransition>
       <div className="container mx-auto grid">
-        <MeasurementChart />
         <Suspense fallback={<Loader />}>
           <Await resolve={data.measurements}>
             <MeasurementTable />
