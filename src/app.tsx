@@ -7,12 +7,14 @@ import SignupPage from "./routes/signup/pape";
 import { loginAction } from "./routes/login/action";
 import { signupAction } from "./routes/signup/action";
 import { profilePageLoader } from "./routes/profile/loader";
+import DashboardErrorPage from "./routes/dashboard/error";
 
 const router = createBrowserRouter([
   {
     id: "root",
     path: "/",
     loader: dashboardPageLoader,
+    errorElement: <DashboardErrorPage />,
     Component: DashboardLayout,
     children: [
       {
