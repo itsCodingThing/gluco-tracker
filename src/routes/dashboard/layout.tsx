@@ -2,22 +2,35 @@ import { AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Outlet } from "react-router-dom";
-import { HouseIcon, TrendingUpDownIcon, UserPenIcon } from "lucide-react";
+import {
+  HouseIcon,
+  LucideIcon,
+  TrendingUpDownIcon,
+  UserPenIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+
+interface BottomTab {
+  to: string;
+  title: string;
+  Icon: LucideIcon;
+}
+
+const tabs: BottomTab[] = [
+  { to: "/", title: "Dashboard", Icon: HouseIcon },
+  {
+    to: "/measurement",
+    title: "Measurement",
+    Icon: TrendingUpDownIcon,
+  },
+  { to: "/profile", title: "Profile", Icon: UserPenIcon },
+];
 
 function BottomNav() {
   return (
     <div className="fixed bottom-0 w-full bg-white border-t border-gray-200">
       <div className="flex justify-between px-6 py-3">
-        {[
-          { to: "/", title: "Dashboard", Icon: HouseIcon },
-          {
-            to: "/measurement",
-            title: "Measurement",
-            Icon: TrendingUpDownIcon,
-          },
-          { to: "/profile", title: "Profile", Icon: UserPenIcon },
-        ].map(({ to, title, Icon }, i) => {
+        {tabs.map(({ to, title, Icon }, i) => {
           return (
             <NavLink
               key={i}
