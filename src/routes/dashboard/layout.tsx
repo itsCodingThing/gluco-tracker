@@ -9,6 +9,7 @@ import {
   UserPenIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import NetworkStatus from "@/components/network-status";
 
 interface BottomTab {
   to: string;
@@ -55,6 +56,7 @@ export default function DashboardLayout() {
   return (
     <>
       <Toaster />
+      <NetworkStatus />
       <div className="pb-20">
         <AnimatePresence>
           <Outlet />
