@@ -1,16 +1,28 @@
-import { getMeasurements } from "@/lib/firestore/measurement";
+import {
+  getMeasurementByType,
+  getMeasurements,
+} from "@/lib/firestore/measurement";
 import { getUserData } from "@/lib/storage";
-import { defer } from "react-router-dom";
+import { defer, LoaderFunctionArgs } from "react-router-dom";
 
-export type MeasurementLoaderData = Awaited<ReturnType<typeof getMeasurements>>;
 export interface MeasurementPageLoaderData {
-  measurements: MeasurementLoaderData;
+  measurements: ReturnType<typeof getMeasurements>;
+  measurementByType: Awaited<ReturnType<typeof getMeasurementByType>>;
 }
 
-export async function measurementLoader() {
+export async function measurementLoader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const type = url.searchParams.get("type");
+
   const user = await getUserData();
+  let measurementByType: MeasurementPageLoaderData["measurementByType"] = [];
+
+  if (type) {
+    measurementByType = await getMeasurementByType(type);
+  }
 
   return defer({
     measurements: getMeasurements(user.userId),
+    measurementByType,
   });
 }

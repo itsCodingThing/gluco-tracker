@@ -23,7 +23,7 @@ export async function getMeasurementByType(
     measurementCollection,
     where("type", "==", type),
     orderBy("createdAt", "desc"),
-    limit(100),
+    limit(60),
   );
   const querySnapshot = await getDocs(q);
 
