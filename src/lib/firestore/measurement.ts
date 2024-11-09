@@ -16,6 +16,25 @@ import {
   measurementDetailsCollection,
 } from "./firestore";
 
+export async function getMeasurementByType(
+  type: string,
+): Promise<Measurement[]> {
+  const q = query(
+    measurementCollection,
+    where("type", "==", type),
+    orderBy("createdAt", "desc"),
+    limit(100),
+  );
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+    };
+  }) as Measurement[];
+}
+
 export async function getMeasurements(userId: string) {
   const q = query(
     measurementCollection,
