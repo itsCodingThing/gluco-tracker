@@ -8,5 +8,6 @@ export interface Profile {
   dob: string;
   img: string;
   contact: string;
+  medication: string[];
   createdAt: string;
 }

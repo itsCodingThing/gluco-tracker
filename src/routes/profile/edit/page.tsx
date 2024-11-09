@@ -11,13 +11,13 @@ import {
 import { formatDate } from "@/lib/date";
 import { fileOpen } from "browser-fs-access";
 import { useState } from "react";
-import { ProfilePageLoaderData } from "../loader";
 import Loader from "@/components/loader";
 import PageTransition from "@/components/page-transition";
+import { DashboardPageLoaderData } from "@/routes/dashboard/loader";
 
 export default function EditProfile() {
   const navigation = useNavigation();
-  const { profile } = useRouteLoaderData("profile") as ProfilePageLoaderData;
+  const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
   const [img, setImg] = useState("");
 
   return (
@@ -86,6 +86,16 @@ export default function EditProfile() {
               id="contact"
               name="contact"
               defaultValue={profile?.contact}
+            />
+          </div>
+          <div className="col-span-2">
+            <Label htmlFor="medication" className="text-right">
+              Medication
+            </Label>
+            <Input
+              id="medication"
+              name="medication"
+              defaultValue={profile?.medication?.join(",")}
             />
           </div>
 

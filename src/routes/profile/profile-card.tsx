@@ -8,10 +8,10 @@ import {
   UserPenIcon,
 } from "@/components/icons";
 import { Link, useRouteLoaderData } from "react-router-dom";
-import { ProfilePageLoaderData } from "./loader";
+import { DashboardPageLoaderData } from "../dashboard/loader";
 
 export default function ProfileCard() {
-  const { profile } = useRouteLoaderData("profile") as ProfilePageLoaderData;
+  const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
 
   if (!profile) {
     return <p>profile</p>;

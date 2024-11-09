@@ -6,7 +6,6 @@ import dashboardPageLoader from "./routes/dashboard/loader";
 import SignupPage from "./routes/signup/pape";
 import { loginAction } from "./routes/login/action";
 import { signupAction } from "./routes/signup/action";
-import { profilePageLoader } from "./routes/profile/loader";
 import DashboardErrorPage from "./routes/dashboard/error";
 
 const router = createBrowserRouter([
@@ -38,9 +37,7 @@ const router = createBrowserRouter([
         },
       },
       {
-        id: "profile",
         path: "profile",
-        loader: profilePageLoader,
         children: [
           {
             index: true,

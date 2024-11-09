@@ -3,7 +3,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -12,11 +11,19 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { ChevronLeftIcon } from "@/components/icons";
-import { Form, Link, useActionData, useNavigation } from "react-router-dom";
+import {
+  Form,
+  Link,
+  useActionData,
+  useNavigation,
+  useRouteLoaderData,
+} from "react-router-dom";
 import type { ActionResponse } from "@/lib/response";
 import Loader from "@/components/loader";
+import { DashboardPageLoaderData } from "../dashboard/loader";
 
 export default function AddMeasurementPage() {
+  const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
   const navigation = useNavigation();
   const response = useActionData() as ActionResponse | null;
 
@@ -82,9 +89,13 @@ export default function AddMeasurementPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>add new +</SelectLabel>
-                  <SelectItem value="type-1">type-1</SelectItem>
-                  <SelectItem value="type-2">type-2</SelectItem>
+                  {profile?.medication.map((value, i) => {
+                    return (
+                      <SelectItem value={value} key={i}>
+                        {value}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectGroup>
               </SelectContent>
             </Select>

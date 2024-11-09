@@ -38,12 +38,13 @@ export async function getProfile(userId: string) {
 
 export async function updateProfileByUserId(
   userId: string,
-  update: Partial<Omit<Profile, "id" | "userId">>,
+  update: Partial<Omit<Profile, "id" | "userId" | "createdAt">>,
 ) {
   const q = query(profileCollection, where("userId", "==", userId));
   const querySnapshot = await getDocs(q);
 
-  for (const snapDoc of querySnapshot.docs) {
+  if (querySnapshot.docs.length === 1) {
+    const snapDoc = querySnapshot.docs[0];
     const docRef = doc(profileCollection, snapDoc.id);
     await updateDoc(docRef, update);
   }
