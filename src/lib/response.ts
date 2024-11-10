@@ -1,21 +1,13 @@
-export interface ActionResponse<T = unknown> {
+export interface Response<T> {
   msg: string;
   status: boolean;
   data: T;
 }
 
-interface ResponsePayload<T = unknown> {
-  msg?: string;
-  status?: boolean;
-  data?: T;
-}
-
-export function createActionResponse<T = string>(
-  props: ResponsePayload<T>,
-): ActionResponse {
+export function createResponse<T>(props: Response<T>): Response<T> {
   return {
-    msg: props.msg ?? "",
-    status: props.status ?? true,
-    data: props.data ?? "",
+    msg: props.msg,
+    status: props.status,
+    data: props.data,
   };
 }

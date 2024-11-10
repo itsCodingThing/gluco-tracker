@@ -13,7 +13,7 @@ interface IResult<T, E> {
    */
   unwrap(): T;
   unwrapOr(defaultValue: T): T;
-  match<U>(onOk: (value: T) => U, onErr: (error: E) => U): U;
+  match<U>(prop: { onOk: (value: T) => U; onErr: (error: E) => U }): U;
 }
 
 class Ok<T> implements IResult<T, never> {
@@ -42,8 +42,8 @@ class Ok<T> implements IResult<T, never> {
     return this.value;
   }
 
-  match<U>(onOk: (value: T) => U, _onErr: (error: never) => U): U {
-    return onOk(this.value);
+  match<U>(prop: { onOk: (value: T) => U; onErr: (error: never) => U }): U {
+    return prop.onOk(this.value);
   }
 }
 
@@ -73,8 +73,8 @@ class Err<E> implements IResult<never, E> {
     return defaultValue;
   }
 
-  match<U>(_onOk: (value: never) => U, onErr: (error: E) => U): U {
-    return onErr(this.error);
+  match<U>(prop: { onOk: (value: never) => U; onErr: (error: E) => U }): U {
+    return prop.onErr(this.error);
   }
 }
 

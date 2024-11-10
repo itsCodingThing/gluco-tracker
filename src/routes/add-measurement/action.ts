@@ -1,5 +1,5 @@
-import { createNewMeasurement } from "@/lib/firestore/measurement";
-import { createActionResponse } from "@/lib/response";
+import { createNewMeasurement } from "@/backend/measurement";
+import { createResponse } from "@/lib/response";
 import { getUserData } from "@/lib/storage";
 import { ActionFunctionArgs, json, redirect } from "react-router-dom";
 import { z } from "zod";
@@ -15,23 +15,31 @@ const CreateMeasurementSchema = z.object({
 
 export async function addMeasurementAction({ request }: ActionFunctionArgs) {
   if (request.method !== "POST") {
-    return json(createActionResponse({ msg: "invalid method" }));
+    return json(
+      createResponse({ msg: "invalid method", status: false, data: "" }),
+    );
+  }
+
+  const user = await getUserData();
+  if (user.isErr) {
+    return redirect("/login");
   }
 
   try {
-    const user = await getUserData();
     const formdata = await request.formData();
     const formPayload = Object.fromEntries(formdata);
 
     const data = await CreateMeasurementSchema.parseAsync({
       ...formPayload,
       createdAt: formdata.get("date"),
-      userId: user.userId,
+      userId: user.unwrap().userId,
     });
     await createNewMeasurement({ ...data });
 
     return redirect("/measurement");
   } catch {
-    return json(createActionResponse({ msg: "failed to add.", status: false }));
+    return json(
+      createResponse({ msg: "failed to add.", status: false, data: "" }),
+    );
   }
 }

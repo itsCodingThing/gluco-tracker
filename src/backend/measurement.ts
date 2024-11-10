@@ -1,20 +1,12 @@
 import { Measurement } from "@/types/measurement";
 import { MeasurementDetails } from "@/types/measurement-details";
 import { formatDate } from "date-fns";
-import {
-  query,
-  where,
-  getDocs,
-  runTransaction,
-  doc,
-  orderBy,
-  limit,
-} from "firebase/firestore";
-import {
-  firestore,
-  measurementCollection,
-  measurementDetailsCollection,
-} from "./firestore";
+import { query, where, getDocs, doc, orderBy, limit } from "firebase/firestore";
+import firebase from "@/lib/firebase";
+import { createResponse } from "@/lib/response";
+
+const { measurementCollection, measurementDetailsCollection } =
+  firebase.collection;
 
 export async function getMeasurementByType(
   type: string,
@@ -63,12 +55,13 @@ export async function getMeasurements(
   return results;
 }
 
-type MeasurementPayload = Partial<Measurement> & {
+type MeasurementPayload = {
   userId: string;
   dosage: number;
   measurement: number;
   type: string;
   createdAt: string;
+  description?: string;
 };
 export async function createNewMeasurement(payload: MeasurementPayload) {
   // save measurement in details collection
@@ -77,7 +70,7 @@ export async function createNewMeasurement(payload: MeasurementPayload) {
   );
 
   try {
-    await runTransaction(firestore, async (transaction) => {
+    await firebase.transaction(async (transaction) => {
       // no details found create one
       if (detailsDocSnap.docs.length === 0) {
         const detailsDocRef = doc(measurementDetailsCollection);
@@ -119,10 +112,37 @@ export async function createNewMeasurement(payload: MeasurementPayload) {
 
       // save measurement
       const docRef = doc(measurementCollection);
-      const saveData = { id: docRef.id, status: "normal", ...payload };
+      const saveData: Measurement = {
+        id: docRef.id,
+        status: "normal",
+        description: "",
+        ...payload,
+      };
       transaction.set(docRef, saveData);
     });
-  } catch (error) {
-    console.log(error);
+
+    return createResponse({
+      msg: "added measurement successfully",
+      data: "",
+      status: true,
+    });
+  } catch {
+    return createResponse({
+      msg: "failed to add measurement",
+      data: "",
+      status: false,
+    });
   }
+}
+
+export async function getMeasurementDetailsByUserId(userId: string) {
+  const q = query(measurementDetailsCollection, where("userId", "==", userId));
+  const docSnaps = await getDocs(q);
+
+  if (docSnaps.docs.length === 0) {
+    return null;
+  }
+
+  const data = docSnaps.docs[0].data() as MeasurementDetails;
+  return data;
 }

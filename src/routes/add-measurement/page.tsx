@@ -18,14 +18,14 @@ import {
   useNavigation,
   useRouteLoaderData,
 } from "react-router-dom";
-import type { ActionResponse } from "@/lib/response";
+import type { Response } from "@/lib/response";
 import Loader from "@/components/loader";
 import { DashboardPageLoaderData } from "../dashboard/loader";
 
 export default function AddMeasurementPage() {
   const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
   const navigation = useNavigation();
-  const response = useActionData() as ActionResponse | null;
+  const response = useActionData() as Response | null;
 
   return (
     <div className="min-h-svh container mx-auto p-2">

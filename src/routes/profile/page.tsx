@@ -3,7 +3,7 @@ import { LogOutIcon } from "@/components/icons";
 import { useNavigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loader from "@/components/loader";
-import { signout } from "@/lib/auth.ts";
+import { signout } from "@/backend/auth";
 import PageTransition from "@/components/page-transition.tsx";
 import ProfileTab from "./profile-tab";
 

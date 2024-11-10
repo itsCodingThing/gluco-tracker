@@ -1,5 +1,5 @@
-import { getMeasurementDetailsByUserId } from "@/lib/firestore/measurement-details";
-import { getProfile } from "@/lib/firestore/profile";
+import { getMeasurementDetailsByUserId } from "@/backend/measurement";
+import { getProfile } from "@/backend/profile";
 import { getUserData } from "@/lib/storage";
 import { defer, redirect } from "react-router-dom";
 
@@ -10,15 +10,23 @@ export interface DashboardPageLoaderData {
 }
 
 export default async function dashboardPageLoader() {
+  const result = await getUserData();
+  const user = result.match<{ isAuthenticated: boolean; userId: string }>({
+    onOk: (v) => v,
+    onErr: () => {
+      return { isAuthenticated: false, userId: "" };
+    },
+  });
+
+  if (!user.isAuthenticated) {
+    return redirect("/login");
+  }
+
   try {
-    const user = await getUserData();
-
-    if (!user.isAuthenticated) {
-      return redirect("/login");
-    }
-
-    const measurementDetails = await getMeasurementDetailsByUserId(user.userId);
-    const profile = await getProfile(user.userId);
+    const [measurementDetails, profile] = await Promise.all([
+      getMeasurementDetailsByUserId(user.userId),
+      getProfile(user.userId),
+    ]);
 
     return defer({
       user: user,

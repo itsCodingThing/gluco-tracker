@@ -1,5 +1,5 @@
-import { signup } from "@/lib/auth";
-import { createActionResponse } from "@/lib/response";
+import { signup } from "@/backend/auth";
+import { createResponse } from "@/lib/response";
 import { ActionFunctionArgs, json, redirect } from "react-router-dom";
 import { z } from "zod";
 
@@ -11,7 +11,9 @@ const SignUpSchema = z.object({
 
 export async function signupAction({ request }: ActionFunctionArgs) {
   if (request.method !== "POST") {
-    return json(createActionResponse({ msg: "invalid form method" }));
+    return json(
+      createResponse({ msg: "invalid form method", status: false, data: "" }),
+    );
   }
 
   const formdata = await request.formData();
@@ -21,6 +23,8 @@ export async function signupAction({ request }: ActionFunctionArgs) {
     await signup(data);
     return redirect("/profile");
   } catch {
-    return json(createActionResponse({ msg: "signup failed" }));
+    return json(
+      createResponse({ msg: "signup failed", status: false, data: "" }),
+    );
   }
 }

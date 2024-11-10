@@ -7,7 +7,10 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { profileCollection } from "./firestore";
+import firebase from "@/lib/firebase";
+import { createResponse } from "@/lib/response";
+
+const { profileCollection } = firebase.collection;
 
 export async function createProfile(payload: Omit<Profile, "id">) {
   const docRef = doc(profileCollection);
@@ -40,12 +43,26 @@ export async function updateProfileByUserId(
   userId: string,
   update: Partial<Omit<Profile, "id" | "userId" | "createdAt">>,
 ) {
-  const q = query(profileCollection, where("userId", "==", userId));
-  const querySnapshot = await getDocs(q);
+  try {
+    const q = query(profileCollection, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
 
-  if (querySnapshot.docs.length === 1) {
-    const snapDoc = querySnapshot.docs[0];
-    const docRef = doc(profileCollection, snapDoc.id);
-    await updateDoc(docRef, update);
+    if (querySnapshot.docs.length === 1) {
+      const snapDoc = querySnapshot.docs[0];
+      const docRef = doc(profileCollection, snapDoc.id);
+      await updateDoc(docRef, update);
+    }
+
+    return createResponse({
+      msg: "profile updated successfully",
+      status: true,
+      data: "",
+    });
+  } catch {
+    return createResponse({
+      msg: "profile update failed",
+      status: false,
+      data: "",
+    });
   }
 }

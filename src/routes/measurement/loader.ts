@@ -1,9 +1,6 @@
-import {
-  getMeasurementByType,
-  getMeasurements,
-} from "@/lib/firestore/measurement";
+import { getMeasurementByType, getMeasurements } from "@/backend/measurement";
 import { getUserData } from "@/lib/storage";
-import { defer, LoaderFunctionArgs } from "react-router-dom";
+import { defer, LoaderFunctionArgs, redirect } from "react-router-dom";
 
 export interface MeasurementPageLoaderData {
   measurements: ReturnType<typeof getMeasurements>;
@@ -15,6 +12,10 @@ export async function measurementLoader({ request }: LoaderFunctionArgs) {
   const type = url.searchParams.get("type");
 
   const user = await getUserData();
+  if (user.isErr) {
+    return redirect("/login");
+  }
+
   let measurementByType: MeasurementPageLoaderData["measurementByType"] = [];
 
   if (type) {
@@ -22,7 +23,7 @@ export async function measurementLoader({ request }: LoaderFunctionArgs) {
   }
 
   return defer({
-    measurements: getMeasurements(user.userId),
+    measurements: getMeasurements(user.unwrap().userId),
     measurementByType,
   });
 }
