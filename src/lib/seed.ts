@@ -45,6 +45,7 @@ for (const i of userCounts) {
     img: "https://picsum.photos/200",
     contact: faker.phone.number({ style: "international" }),
     createdAt: new Date().toISOString(),
+    medication: [],
   };
   await setDoc(profileDocRef, saveData);
   user.profileId = profileDocRef.id;

@@ -28,6 +28,7 @@ export async function signup(payload: SignupPayload) {
     payload.email,
     payload.password,
   );
+
   await createProfile({
     userId: result.user.uid,
     patientId: crypto.randomUUID(),
@@ -38,7 +39,9 @@ export async function signup(payload: SignupPayload) {
     img: "https://picsum.photos/200",
     contact: "",
     createdAt: new Date().toISOString(),
+    medication: [],
   });
+
   await storeUserData({
     userId: result.user.uid,
     isAuthenticated: true,
@@ -53,6 +56,7 @@ type SigninPayloadInput = z.input<typeof SigninSchema>;
 
 export async function signin(payload: SigninPayloadInput) {
   const verifiedPayload = await SigninSchema.parseAsync(payload);
+
   const result = await signInWithEmailAndPassword(
     auth,
     verifiedPayload.email,

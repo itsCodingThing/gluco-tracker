@@ -16,7 +16,7 @@ import {
   Table,
 } from "@/components/ui/table";
 import { useAsyncValue } from "react-router-dom";
-import { MeasurementLoaderData } from "./loader";
+import { MeasurementPageLoaderData } from "./loader";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -123,8 +123,8 @@ function useTable<T>(data: T[]) {
 }
 
 export default function MeasurementTable() {
-  const data = useAsyncValue() as MeasurementLoaderData;
-  const table = useTable(data);
+  const data = useAsyncValue() as MeasurementPageLoaderData;
+  const table = useTable(data.measurements);
 
   return (
     <>
