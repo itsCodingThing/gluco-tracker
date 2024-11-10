@@ -4,6 +4,7 @@ import {
   connectFirestoreEmulator,
   runTransaction,
   Transaction,
+  writeBatch,
 } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
@@ -30,6 +31,7 @@ export default {
   auth,
   transaction: async <T>(fn: (t: Transaction) => Promise<T>) =>
     await runTransaction<T>(firestore, fn),
+  batch: () => writeBatch(firestore),
   collection: {
     measurementCollection,
     measurementDetailsCollection,

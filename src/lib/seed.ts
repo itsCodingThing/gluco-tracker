@@ -1,16 +1,17 @@
 import { faker } from "@faker-js/faker";
-import {
-  firestore,
-  measurementCollection,
-  measurementDetailsCollection,
-  profileCollection,
-} from "./firestore/firestore";
-import { doc, setDoc, writeBatch } from "firebase/firestore";
-import { auth } from "./auth";
+import firebase from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Measurement } from "@/types/measurement";
 import { MeasurementDetails } from "@/types/measurement-details";
 import { Profile } from "@/types/profile";
+
+const {
+  measurementCollection,
+  measurementDetailsCollection,
+  profileCollection,
+} = firebase.collection;
+const { auth } = firebase;
 
 const userCounts = Array.from({ length: 100 }).map((_, i) => i);
 const measurementCounts = Array.from({ length: 500 }).map((_, i) => i);
@@ -77,7 +78,7 @@ for (const i of userCounts) {
   await setDoc(detailsDocRef, details);
 
   // create measurements
-  const batch = writeBatch(firestore);
+  const batch = firebase.batch();
   for (const j of measurementCounts) {
     const docRef = doc(measurementCollection);
     const measurement = faker.number.int({ min: 40, max: 300 });
