@@ -6,7 +6,7 @@ import { getUserData } from "@/lib/storage";
 import { defer, LoaderFunctionArgs } from "react-router-dom";
 
 export interface MeasurementPageLoaderData {
-  measurements: Awaited<ReturnType<typeof getMeasurements>>;
+  measurements: ReturnType<typeof getMeasurements>;
   measurementByType: Awaited<ReturnType<typeof getMeasurementByType>>;
 }
 

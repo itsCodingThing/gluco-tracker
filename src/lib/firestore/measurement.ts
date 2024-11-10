@@ -35,7 +35,9 @@ export async function getMeasurementByType(
   }) as Measurement[];
 }
 
-export async function getMeasurements(userId: string) {
+export async function getMeasurements(
+  userId: string,
+): Promise<Partial<Omit<Measurement, "userId">>[]> {
   const q = query(
     measurementCollection,
     where("userId", "==", userId),

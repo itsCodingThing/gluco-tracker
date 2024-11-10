@@ -123,8 +123,10 @@ function useTable<T>(data: T[]) {
 }
 
 export default function MeasurementTable() {
-  const data = useAsyncValue() as MeasurementPageLoaderData;
-  const table = useTable(data.measurements);
+  const data = useAsyncValue() as Awaited<
+    MeasurementPageLoaderData["measurements"]
+  >;
+  const table = useTable(data);
 
   return (
     <>

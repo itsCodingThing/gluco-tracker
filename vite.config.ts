@@ -2,10 +2,14 @@ import path from "path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import react from "@vitejs/plugin-react";
+import jotaiDebugLabel from "jotai/babel/plugin-debug-label";
+import jotaiReactRefresh from "jotai/babel/plugin-react-refresh";
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: { plugins: [jotaiDebugLabel, jotaiReactRefresh] },
+    }),
     VitePWA({
       registerType: "prompt",
       injectRegister: false,
