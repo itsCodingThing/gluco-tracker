@@ -25,7 +25,7 @@ import { DashboardPageLoaderData } from "../dashboard/loader";
 export default function AddMeasurementPage() {
   const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
   const navigation = useNavigation();
-  const response = useActionData() as Response | null;
+  const response = useActionData() as Response<string> | null;
 
   return (
     <div className="min-h-svh container mx-auto p-2">
@@ -38,7 +38,7 @@ export default function AddMeasurementPage() {
         </h1>
       </div>
       <Form method="post" className="grid grid-cols-4 gap-3">
-        <div className="col-span-2">
+        <div className="col-span-4">
           <Label htmlFor="measurement" className="text-left">
             measurement
           </Label>
@@ -54,7 +54,7 @@ export default function AddMeasurementPage() {
             <span>mg/dL</span>
           </div>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-4">
           <Label htmlFor="dosage" className="text-left">
             dosage
           </Label>
@@ -70,21 +70,21 @@ export default function AddMeasurementPage() {
             <span>ml</span>
           </div>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-4">
           <Label htmlFor="date" className="text-left">
             date
           </Label>
-          <div className="flex w-full items-center space-x-2">
+          <div className="flex w-full">
             <DatePicker clock hiddenInput />
           </div>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-4">
           <Label htmlFor="type" className="text-left">
             dosage type
           </Label>
           <div className="flex w-full items-center space-x-2">
             <Select required name="type">
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a type" />
               </SelectTrigger>
               <SelectContent>

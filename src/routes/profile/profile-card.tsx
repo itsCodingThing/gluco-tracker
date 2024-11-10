@@ -9,8 +9,10 @@ import {
 } from "@/components/icons";
 import { Link, useRouteLoaderData } from "react-router-dom";
 import { DashboardPageLoaderData } from "../dashboard/loader";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ProfileCard() {
+  const { toast } = useToast();
   const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
 
   if (!profile) {
@@ -60,15 +62,19 @@ export default function ProfileCard() {
           onClick={() => {
             const profileLink = { url: "/profile" };
 
-            if (navigator.canShare(profileLink)) {
-              navigator
-                .share(profileLink)
-                .then(() => {
-                  console.log("share");
-                })
-                .catch(() => {
-                  console.log("unable to share");
-                });
+            try {
+              if (navigator.canShare(profileLink)) {
+                navigator
+                  .share(profileLink)
+                  .then(() => {
+                    console.log("share");
+                  })
+                  .catch(() => {
+                    console.log("unable to share");
+                  });
+              }
+            } catch {
+              toast({ variant: "destructive", title: "Share is available" });
             }
           }}
         >
