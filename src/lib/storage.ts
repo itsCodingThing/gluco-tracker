@@ -13,7 +13,7 @@ export async function storeUserData(
   payload: ZodInput<typeof UserSchema>,
 ): Promise<Result<void, AppError>> {
   const parseResult = await parseAsync(UserSchema, payload);
-  if (parseResult.isErr) {
+  if (parseResult.isErr()) {
     return Result.err(new AppError({ msg: "Parsing failed" }));
   }
 

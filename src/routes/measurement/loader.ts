@@ -12,7 +12,7 @@ export async function measurementLoader({ request }: LoaderFunctionArgs) {
   const type = url.searchParams.get("type");
 
   const user = await getUserData();
-  if (user.isErr) {
+  if (user.isErr()) {
     return redirect("/login");
   }
 

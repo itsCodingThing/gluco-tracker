@@ -4,8 +4,8 @@
 export type Result<T, E> = Ok<T> | Err<E>;
 
 interface IResult<T, E> {
-  get isOk(): boolean;
-  get isErr(): boolean;
+  isOk(): this is Ok<T>;
+  isErr(): this is Err<E>;
   map<U>(fn: (value: T) => U): Result<U, E>;
   flatMap<U>(fn: (value: T) => Result<U, E>): Result<U, E>;
   /**
@@ -19,10 +19,11 @@ interface IResult<T, E> {
 class Ok<T> implements IResult<T, never> {
   constructor(public readonly value: T) {}
 
-  get isOk() {
+  isOk(): this is Ok<T> {
     return true;
   }
-  get isErr() {
+
+  isErr(): this is Err<never> {
     return false;
   }
 
@@ -50,10 +51,11 @@ class Ok<T> implements IResult<T, never> {
 class Err<E> implements IResult<never, E> {
   constructor(public readonly error: E) {}
 
-  get isOk() {
+  isOk(): this is Ok<never> {
     return false;
   }
-  get isErr() {
+
+  isErr(): this is Err<E> {
     return true;
   }
 

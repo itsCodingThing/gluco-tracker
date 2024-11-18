@@ -21,7 +21,7 @@ export async function addMeasurementAction({ request }: ActionFunctionArgs) {
   }
 
   const user = await getUserData();
-  if (user.isErr) {
+  if (user.isErr()) {
     return redirect("/login");
   }
 

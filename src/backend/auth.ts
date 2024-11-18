@@ -44,7 +44,7 @@ export async function signin(
   payload: SigninPayloadInput,
 ): Promise<Response<string>> {
   const verifiedPayload = await parseAsync(SigninSchema, payload);
-  if (verifiedPayload.isErr) {
+  if (verifiedPayload.isErr()) {
     return createResponse({
       status: false,
       msg: "Please check fields",

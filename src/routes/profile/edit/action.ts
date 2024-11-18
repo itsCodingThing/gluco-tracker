@@ -2,7 +2,7 @@ import { updateProfileByUserId } from "@/backend/profile";
 import { createResponse } from "@/lib/response";
 import { getUserData } from "@/lib/storage";
 import { parseAsync, zod } from "@/lib/validation";
-import { ActionFunctionArgs, json, redirect } from "react-router-dom";
+import { ActionFunctionArgs, redirect } from "react-router-dom";
 
 const EditProfileSchema = zod.object({
   name: zod.string(),
@@ -14,9 +14,7 @@ const EditProfileSchema = zod.object({
 
 export async function editProfileAction({ request }: ActionFunctionArgs) {
   if (request.method !== "POST") {
-    return json(
-      createResponse({ msg: "wrong method", status: false, data: "" }),
-    );
+    return createResponse({ msg: "wrong method", status: false, data: "" })
   }
 
   const formdata = await request.formData();
@@ -25,16 +23,14 @@ export async function editProfileAction({ request }: ActionFunctionArgs) {
     Object.fromEntries(formdata),
   );
 
-  if (result.isErr) {
-    return json(
-      createResponse({ msg: "check the fields", status: false, data: "" }),
-    );
+  if (result.isErr()) {
+    return createResponse({ msg: "check the fields", status: false, data: "" })
   }
 
   const payload = result.unwrap();
 
   const user = await getUserData();
-  if (user.isErr) {
+  if (user.isErr()) {
     return redirect("/login");
   }
 
@@ -44,6 +40,5 @@ export async function editProfileAction({ request }: ActionFunctionArgs) {
   });
 
   if (!response.status) {
-    return json(createResponse({ ...response }));
-  }
+    return createResponse({ ...response })  }
 }
