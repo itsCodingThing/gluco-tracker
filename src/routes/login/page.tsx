@@ -1,10 +1,13 @@
+import { EyeIcon, EyeOffIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Response } from "@/lib/response";
+import { useState } from "react";
 import { Form, Link, useActionData } from "react-router-dom";
 
 export default function LoginPage() {
+  const [toggle, setToggle] = useState(false);
   const response = useActionData() as Response<string> | null;
 
   return (
@@ -24,14 +27,19 @@ export default function LoginPage() {
           </div>
           <div>
             <Label htmlFor="password">Password</Label>
+            <div className="flex items-center">
             <Input
               id="password"
               className="mt-1"
               name="password"
               placeholder="Enter your password"
-              type="password"
+              type={toggle ? "password" : "text"}
               required
             />
+              <div className="m-2 cursor-pointer" onClick={() => setToggle(!toggle)}>
+              {toggle ? <EyeIcon/> : <EyeOffIcon/>}
+              </div>
+            </div>
           </div>
           <Button type="submit">Login</Button>
         </Form>

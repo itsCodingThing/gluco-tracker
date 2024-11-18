@@ -14,4 +14,6 @@ export {
   ClipboardIcon,
   LogOutIcon,
   CloudUploadIcon,
+  EyeIcon,
+  EyeOffIcon
 } from "lucide-react";
