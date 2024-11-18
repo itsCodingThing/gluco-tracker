@@ -11,8 +11,10 @@ export default defineConfig({
       babel: { plugins: [jotaiDebugLabel, jotaiReactRefresh] },
     }),
     VitePWA({
-      registerType: "prompt",
-      injectRegister: false,
+      registerType: "autoUpdate",
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "service-worker/sw.ts",
 
       pwaAssets: {
         disabled: false,
@@ -21,7 +23,7 @@ export default defineConfig({
 
       manifest: {
         name: "gluco-tracker",
-        short_name: "gluco-tracker",
+        short_name: "gluco",
         description: "glucose trakcer app",
         theme_color: "#ffffff",
       },
@@ -34,7 +36,7 @@ export default defineConfig({
       },
 
       devOptions: {
-        enabled: false,
+        enabled: true,
         navigateFallback: "index.html",
         suppressWarnings: true,
         type: "module",
