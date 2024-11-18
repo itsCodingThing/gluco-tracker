@@ -40,7 +40,7 @@ const SigninSchema = zod.object({
   password: z.string(),
 });
 type SigninPayloadInput = ZodInput<typeof SigninSchema>;
-export async function signin(
+export async function login(
   payload: SigninPayloadInput,
 ): Promise<Response<string>> {
   const verifiedPayload = await parseAsync(SigninSchema, payload);

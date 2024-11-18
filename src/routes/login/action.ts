@@ -1,4 +1,4 @@
-import { signin } from "@/backend/auth";
+import { login } from "@/backend/auth";
 import { createResponse } from "@/lib/response";
 import { storeUserData } from "@/lib/storage";
 import { ActionFunctionArgs, redirect } from "react-router-dom";
@@ -11,7 +11,7 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 
   const formdata = await request.formData();
 
-  const response = await signin({
+  const response = await login({
     email: (formdata.get("email") as string) ?? "",
     password: (formdata.get("password") as string) ?? "",
   });
