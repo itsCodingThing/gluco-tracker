@@ -10,7 +10,7 @@ export default function SignupPage() {
 
   return (
     <div className="container mx-auto py-1 px-2">
-      <h1 className="text-3xl rext-center font-bold mb-5">Signup</h1>
+      <h1 className="text-3xl text-center font-bold mb-5">Signup</h1>
       <Form method="post" className="grid gap-5">
         <div>
           <Label htmlFor="name">Name</Label>
@@ -33,9 +33,9 @@ export default function SignupPage() {
             required
           />
         </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <div className="flex items-center">
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <div className="flex items-center">
             <Input
               id="password"
               className="mt-1"
@@ -44,11 +44,11 @@ export default function SignupPage() {
               type={toggle ? "password" : "text"}
               required
             />
-              <div className="m-2 cursor-pointer" onClick={() => setToggle(!toggle)}>
-              {toggle ? <EyeIcon/> : <EyeOffIcon/>}
-              </div>
+            <div className="m-2 cursor-pointer" onClick={() => setToggle(!toggle)}>
+              {toggle ? <EyeIcon /> : <EyeOffIcon />}
             </div>
           </div>
+        </div>
         <Button type="submit">Signup</Button>
       </Form>
       <div className="mt-4 text-center">

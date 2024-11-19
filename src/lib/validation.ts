@@ -12,7 +12,7 @@ export async function parseAsync<TSchema extends z.ZodTypeAny>(
 ): Promise<Result<ZodOutput<TSchema>, ParseError>> {
   try {
     const safeValues = await schema.parseAsync(value);
-    return Result.ok(safeValues as z.infer<TSchema>);
+    return Result.ok(safeValues as ZodOutput<TSchema>);
   } catch (error) {
     if (error instanceof ZodError) {
       const errMessages = error.issues.map(({ message }) => message);

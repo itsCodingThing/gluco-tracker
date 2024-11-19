@@ -7,7 +7,7 @@ const UserSchema = zod.object({
   isAuthenticated: zod.boolean(),
 });
 
-export type UserData = ZodOutput<typeof UserSchema>;
+type UserData = ZodOutput<typeof UserSchema>;
 
 export async function storeUserData(
   payload: ZodInput<typeof UserSchema>,
@@ -20,17 +20,29 @@ export async function storeUserData(
   try {
     const stringifyData = JSON.stringify(parseResult.unwrap());
     localStorage.setItem("user", stringifyData);
+
     return Result.ok(undefined);
   } catch {
     return Result.err(new AppError({ msg: "Parsing failed" }));
   }
 }
 
-export async function getUserData() {
-  const data = JSON.parse(localStorage.getItem("user") ?? "{}");
-  const result = await parseAsync(UserSchema, data);
+export async function getUserData(): Promise<Result<UserData, AppError>> {
+  let data;
+  try {
+    data = JSON.parse(localStorage.getItem("user") ?? "{}");
+  } catch {
+    return Result.err(new AppError({msg: "unable to get user from localstorage"}));
+  }
 
-  return result;
+  const result = await parseAsync(UserSchema, data);
+  if (result.isErr()) {
+    return Result.err(
+      new AppError({ msg: "unable to get user from localstorage" }),
+    );
+  }
+
+  return Result.ok(result.value);
 }
 
 export function removeStoreData() {

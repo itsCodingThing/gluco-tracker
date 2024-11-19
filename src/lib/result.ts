@@ -17,7 +17,7 @@ interface IResult<T, E> {
 }
 
 class Ok<T> implements IResult<T, never> {
-  constructor(public readonly value: T) {}
+  constructor(public readonly value: T) { }
 
   isOk(): this is Ok<T> {
     return true;
@@ -49,7 +49,7 @@ class Ok<T> implements IResult<T, never> {
 }
 
 class Err<E> implements IResult<never, E> {
-  constructor(public readonly error: E) {}
+  constructor(public readonly error: E) { }
 
   isOk(): this is Ok<never> {
     return false;
@@ -88,7 +88,35 @@ function err<E>(error: E): Result<never, E> {
   return new Err(error);
 }
 
+function withResult<Fn extends (...args: any[]) => any, E = unknown>(
+  fn: Fn,
+  ...args: Parameters<Fn>
+): Result<ReturnType<Fn>, E> {
+  try {
+    const result = fn(...args);
+    return Result.ok(result);
+  } catch (error) {
+    return Result.err(error as E);
+  }
+}
+
+async function withResultAsync<
+  Fn extends () => Promise<unknown>,
+  E = unknown,
+>(
+  fn: Fn,
+): Promise<Result<Awaited<ReturnType<Fn>>, E>> {
+  try {
+    const result = await fn();
+    return Result.ok(result as Awaited<ReturnType<Fn>>);
+  } catch (error) {
+    return Result.err(error as E);
+  }
+}
+
 export const Result = {
   ok,
   err,
+  withResult,
+  withResultAsync,
 };

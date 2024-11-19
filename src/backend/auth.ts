@@ -2,27 +2,33 @@ import {
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  browserLocalPersistence
 } from "firebase/auth";
-import { z } from "zod";
 import { createProfile } from "./profile";
 import firebase from "@/lib/firebase";
-import { parseAsync, zod, ZodInput } from "@/lib/validation";
-import { createResponse, type Response } from "@/lib/response";
+import { Result } from "@/lib/result";
+import { ExternalServiceError } from "@/lib/errors";
 
 interface SignupPayload {
   email: string;
   password: string;
   name: string;
 }
-export async function signup(payload: SignupPayload) {
-  const result = await createUserWithEmailAndPassword(
+export async function signup(payload: SignupPayload): Promise<Result<string, ExternalServiceError>> {
+  const result = await Result.withResultAsync(async () => await createUserWithEmailAndPassword(
     firebase.auth,
     payload.email,
     payload.password,
-  );
+  ));
 
-  await createProfile({
-    userId: result.user.uid,
+  if (result.isErr()) {
+    return Result.err(new ExternalServiceError({ msg: "unable to create new user", data: result.error }))
+  }
+
+  const userId = result.value.user.uid;
+
+  const createProfileResult = await createProfile({
+    userId: userId,
     patientId: crypto.randomUUID(),
     name: payload.name,
     email: payload.email,
@@ -33,44 +39,45 @@ export async function signup(payload: SignupPayload) {
     createdAt: new Date().toISOString(),
     medication: [],
   });
+
+  if (createProfileResult.isErr()) {
+    Result.err(new ExternalServiceError({ msg: "unable to create profile" }))
+  }
+
+
+  return Result.ok(userId);
 }
 
-const SigninSchema = zod.object({
-  email: z.string(),
-  password: z.string(),
-});
-type SigninPayloadInput = ZodInput<typeof SigninSchema>;
-export async function login(
-  payload: SigninPayloadInput,
-): Promise<Response<string>> {
-  const verifiedPayload = await parseAsync(SigninSchema, payload);
-  if (verifiedPayload.isErr()) {
-    return createResponse({
-      status: false,
-      msg: "Please check fields",
-      data: "",
-    });
-  }
-  const data = verifiedPayload.unwrap();
+export async function login(payload: {
+  email: string;
+  password: string;
+}): Promise<Result<string, ExternalServiceError>> {
+  firebase.auth.setPersistence(browserLocalPersistence);
 
-  try {
-    const result = await signInWithEmailAndPassword(
+  const result = await Result.withResultAsync(
+    async () => await signInWithEmailAndPassword(
       firebase.auth,
-      data.email,
-      data.password,
-    );
+      payload.email,
+      payload.password,
+    ));
 
-    return createResponse({
-      status: true,
-      msg: "successfully signedin",
-      data: result.user.uid,
-    });
-  } catch {
-    return createResponse({
-      status: false,
-      msg: "Signin failed",
-      data: "",
-    });
+  if (result.isErr()) {
+    return Result.err(new ExternalServiceError({ msg: "login failed", data: result.error }));
+  }
+
+  const userId = result.value.user.uid;
+  return Result.ok(userId);
+}
+
+export function getLoggedInUser() {
+  const user = firebase.auth.currentUser;
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    userId: user.uid
   }
 }
 

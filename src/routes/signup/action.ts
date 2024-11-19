@@ -1,12 +1,12 @@
 import { signup } from "@/backend/auth";
 import { createResponse } from "@/lib/response";
-import { ActionFunctionArgs, json, redirect } from "react-router-dom";
-import { z } from "zod";
+import { parseAsync, zod } from "@/lib/validation";
+import { ActionFunctionArgs, json } from "react-router-dom";
 
-const SignUpSchema = z.object({
-  name: z.string(),
-  email: z.string(),
-  password: z.string(),
+const SignUpSchema = zod.object({
+  name: zod.string(),
+  email: zod.string(),
+  password: zod.string(),
 });
 
 export async function signupAction({ request }: ActionFunctionArgs) {
@@ -17,14 +17,13 @@ export async function signupAction({ request }: ActionFunctionArgs) {
   }
 
   const formdata = await request.formData();
+  const data = await parseAsync(SignUpSchema, Object.fromEntries(formdata));
+  if (data.isErr()) {
+    return createResponse({ msg: "Fill form properly", status: false, data: "" });
+  }
 
-  try {
-    const data = await SignUpSchema.parseAsync(Object.fromEntries(formdata));
-    await signup(data);
-    return redirect("/profile");
-  } catch {
-    return json(
-      createResponse({ msg: "signup failed", status: false, data: "" }),
-    );
+  const signupResult = await signup(data.value);
+  if (signupResult.isErr()) {
+    return createResponse({ msg: "Signup failed.", status: false, data: signupResult.error });
   }
 }

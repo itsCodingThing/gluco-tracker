@@ -1,24 +1,19 @@
+import { getLoggedInUser } from "@/backend/auth";
 import { getMeasurementDetailsByUserId } from "@/backend/measurement";
 import { getProfile } from "@/backend/profile";
-import { getUserData } from "@/lib/storage";
+import { AuthUser } from "@/types/auth";
 import { defer, redirect } from "react-router-dom";
 
+
 export interface DashboardPageLoaderData {
-  user: ReturnType<typeof getUserData>;
+  user: AuthUser;
   measurementDetails: Awaited<ReturnType<typeof getMeasurementDetailsByUserId>>;
   profile: Awaited<ReturnType<typeof getProfile>>;
 }
 
 export default async function dashboardPageLoader() {
-  const result = await getUserData();
-  const user = result.match<{ isAuthenticated: boolean; userId: string }>({
-    onOk: (v) => v,
-    onErr: () => {
-      return { isAuthenticated: false, userId: "" };
-    },
-  });
-
-  if (!user.isAuthenticated) {
+  const user = getLoggedInUser();
+  if (!user) {
     return redirect("/login");
   }
 

@@ -20,6 +20,11 @@ export class BaseError extends Error {
   constructor(errorParams: BaseErrorParams) {
     super(errorParams.msg);
     this.errorNameMsg = `${errorParams.name}: ${errorParams.msg}`;
+
+    if (import.meta.env.MODE === "development") {
+      console.log(this.errorNameMsg);
+      console.log(errorParams?.data)
+    }
   }
 }
 
@@ -35,10 +40,6 @@ export class ParseError extends BaseError {
       msg: errorParams?.msg ?? "oh noo !!!!",
       data: errorParams?.data ?? {},
     });
-
-    if (import.meta.env.MODE === "development") {
-      console.log(this.errorNameMsg, errorParams?.data);
-    }
   }
 }
 
@@ -49,10 +50,6 @@ export class AppError extends BaseError {
       msg: errorParams?.msg ?? "oh noo !!!!",
       data: errorParams?.data ?? {},
     });
-
-    if (import.meta.env.MODE === "development") {
-      console.log(this.errorNameMsg, errorParams?.data);
-    }
   }
 }
 
@@ -63,9 +60,5 @@ export class ExternalServiceError extends BaseError {
       msg: errorParams?.msg ?? "oh noo !!!!",
       data: errorParams?.data ?? {},
     });
-
-    if (import.meta.env.MODE === "development") {
-      console.log(this.errorNameMsg, errorParams?.data);
-    }
   }
 }
