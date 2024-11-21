@@ -3,7 +3,8 @@ import { MeasurementDetails } from "@/types/measurement-details";
 import { formatDate } from "date-fns";
 import { query, where, getDocs, doc, orderBy, limit } from "firebase/firestore";
 import firebase from "@/lib/firebase";
-import { createResponse } from "@/lib/response";
+import { Result } from "@/lib/result";
+import { ExternalServiceError } from "@/lib/errors";
 
 const { measurementCollection, measurementDetailsCollection } =
   firebase.collection;
@@ -63,52 +64,26 @@ type MeasurementPayload = {
   createdAt: string;
   description?: string;
 };
-export async function createNewMeasurement(payload: MeasurementPayload) {
-  // save measurement in details collection
-  const detailsDocSnap = await getDocs(
-    query(measurementDetailsCollection, where("userId", "==", payload.userId)),
-  );
-
+export async function createNewMeasurement(payload: MeasurementPayload): Promise<Result<string, ExternalServiceError>> {
   try {
-    await firebase.transaction(async (transaction) => {
-      // no details found create one
-      if (detailsDocSnap.docs.length === 0) {
-        const detailsDocRef = doc(measurementDetailsCollection);
-        const details: MeasurementDetails = {
-          id: detailsDocRef.id,
-          userId: payload.userId,
-          latestMeasurement: {
-            measuremnt: payload.measurement,
-            dosage: payload.dosage,
-            type: payload.type,
-            date: payload.createdAt,
-          },
-          maxMeasurement: {
-            measuremnt: 0,
-            dosage: 0,
-            type: "",
-            date: "",
-          },
-          minMeasurement: {
-            measuremnt: 0,
-            dosage: 0,
-            type: "",
-            date: "",
-          },
-        };
+    // save measurement in details collection
+    const detailsDocSnap = await getDocs(
+      query(measurementDetailsCollection, where("userId", "==", payload.userId)),
+    );
+    if (detailsDocSnap.docs.length === 0) {
+      return Result.err(new ExternalServiceError({ msg: "no measurement details doc found" }))
+    }
 
-        transaction.set(detailsDocRef, details);
-      } else {
-        const detailsDocRef = detailsDocSnap.docs[0].ref;
-        transaction.update(detailsDocRef, {
-          latestMeasurement: {
-            measuremnt: payload.measurement,
-            dosage: payload.dosage,
-            type: payload.type,
-            date: payload.createdAt,
-          },
-        });
-      }
+    const id = await firebase.transaction(async (transaction) => {
+      const detailsDocRef = detailsDocSnap.docs[0].ref;
+      transaction.update(detailsDocRef, {
+        latestMeasurement: {
+          measuremnt: payload.measurement,
+          dosage: payload.dosage,
+          type: payload.type,
+          date: payload.createdAt,
+        },
+      });
 
       // save measurement
       const docRef = doc(measurementCollection);
@@ -119,19 +94,13 @@ export async function createNewMeasurement(payload: MeasurementPayload) {
         ...payload,
       };
       transaction.set(docRef, saveData);
+
+      return docRef.id;
     });
 
-    return createResponse({
-      msg: "added measurement successfully",
-      data: "",
-      status: true,
-    });
-  } catch {
-    return createResponse({
-      msg: "failed to add measurement",
-      data: "",
-      status: false,
-    });
+    return Result.ok(id)
+  } catch (error) {
+    return Result.err(new ExternalServiceError({ msg: "failed to save measurement", data: error }))
   }
 }
 

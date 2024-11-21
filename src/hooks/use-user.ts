@@ -1,8 +1,8 @@
-import type { UserData } from "@/lib/storage";
+import type { AuthUser } from "@/types/auth";
 import { useRouteLoaderData } from "react-router-dom";
 
 export function useUser() {
-  const user = useRouteLoaderData("root") as UserData;
+  const user = useRouteLoaderData("root") as AuthUser;
 
   return user;
 }

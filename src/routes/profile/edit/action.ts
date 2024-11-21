@@ -1,6 +1,6 @@
+import { getLoggedInUser } from "@/backend/auth";
 import { updateProfileByUserId } from "@/backend/profile";
 import { createResponse } from "@/lib/response";
-import { getUserData } from "@/lib/storage";
 import { parseAsync, zod } from "@/lib/validation";
 import { ActionFunctionArgs, redirect } from "react-router-dom";
 
@@ -18,27 +18,28 @@ export async function editProfileAction({ request }: ActionFunctionArgs) {
   }
 
   const formdata = await request.formData();
-  const result = await parseAsync(
+  const parseResult = await parseAsync(
     EditProfileSchema,
     Object.fromEntries(formdata),
   );
 
-  if (result.isErr()) {
+  if (parseResult.isErr()) {
     return createResponse({ msg: "check the fields", status: false, data: "" })
   }
 
-  const payload = result.unwrap();
-
-  const user = await getUserData();
+  const user = getLoggedInUser();
   if (user.isErr()) {
     return redirect("/login");
   }
 
-  const response = await updateProfileByUserId(user.unwrap().userId, {
-    ...payload,
-    medication: payload.medication.split(","),
+  const response = await updateProfileByUserId(user.value.userId, {
+    ...parseResult.value,
+    medication: parseResult.value.medication.split(","),
   });
 
-  if (!response.status) {
-    return createResponse({ ...response })  }
+  if (response.isErr()) {
+    return createResponse({ msg: response.error.errorNameMsg, status: false, data: response.error })
+  }
+
+  return redirect("/profile");
 }

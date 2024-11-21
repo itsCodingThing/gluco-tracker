@@ -1,45 +1,44 @@
 import { createNewMeasurement } from "@/backend/measurement";
 import { createResponse } from "@/lib/response";
-import { getUserData } from "@/lib/storage";
-import { ActionFunctionArgs, json, redirect } from "react-router-dom";
-import { z } from "zod";
+import { getLoggedInUser } from "@/backend/auth";
+import { ActionFunctionArgs, redirect } from "react-router-dom";
+import { parseAsync, zod } from "@/lib/validation";
 
-const CreateMeasurementSchema = z.object({
-  userId: z.string(),
-  measurement: z.coerce.number(),
-  dosage: z.coerce.number(),
-  type: z.string(),
-  createdAt: z.string().default(() => new Date().toISOString()),
-  description: z.string().default(""),
+const CreateMeasurementSchema = zod.object({
+  userId: zod.string(),
+  measurement: zod.coerce.number(),
+  dosage: zod.coerce.number(),
+  type: zod.string(),
+  createdAt: zod.string().default(() => new Date().toISOString()),
+  description: zod.string().default(""),
 });
 
 export async function addMeasurementAction({ request }: ActionFunctionArgs) {
   if (request.method !== "POST") {
-    return json(
-      createResponse({ msg: "invalid method", status: false, data: "" }),
-    );
+    return createResponse({ msg: "invalid method", status: false, data: "" });
   }
 
-  const user = await getUserData();
+  const user = getLoggedInUser();
   if (user.isErr()) {
-    return redirect("/login");
+    return null
   }
 
-  try {
-    const formdata = await request.formData();
-    const formPayload = Object.fromEntries(formdata);
+  const formdata = await request.formData();
+  const formPayload = Object.fromEntries(formdata);
 
-    const data = await CreateMeasurementSchema.parseAsync({
-      ...formPayload,
-      createdAt: formdata.get("date"),
-      userId: user.unwrap().userId,
-    });
-    await createNewMeasurement({ ...data });
-
-    return redirect("/measurement");
-  } catch {
-    return json(
-      createResponse({ msg: "failed to add.", status: false, data: "" }),
-    );
+  const data = await parseAsync(CreateMeasurementSchema, {
+    ...formPayload,
+    createdAt: formdata.get("date"),
+    userId: user.value.userId,
+  });
+  if (data.isErr()) {
+    return createResponse({ msg: "Please check inputs.", status: false, data: data.error })
   }
+
+  const result = await createNewMeasurement(data.value);
+  if (result.isErr()) {
+    return createResponse({ msg: result.error.errorNameMsg, status: false, data: result.error })
+  }
+
+  return redirect("/");
 }

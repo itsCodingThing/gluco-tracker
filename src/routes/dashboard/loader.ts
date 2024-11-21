@@ -13,14 +13,14 @@ export interface DashboardPageLoaderData {
 
 export default async function dashboardPageLoader() {
   const user = getLoggedInUser();
-  if (!user) {
+  if (user.isErr()) {
     return redirect("/login");
   }
 
   try {
     const [measurementDetails, profile] = await Promise.all([
-      getMeasurementDetailsByUserId(user.userId),
-      getProfile(user.userId),
+      getMeasurementDetailsByUserId(user.value.userId),
+      getProfile(user.value.userId),
     ]);
 
     return defer({

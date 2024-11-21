@@ -8,6 +8,7 @@ import { createProfile } from "./profile";
 import firebase from "@/lib/firebase";
 import { Result } from "@/lib/result";
 import { ExternalServiceError } from "@/lib/errors";
+import { AuthUser } from "@/types/auth";
 
 interface SignupPayload {
   email: string;
@@ -69,16 +70,16 @@ export async function login(payload: {
   return Result.ok(userId);
 }
 
-export function getLoggedInUser() {
+export function getLoggedInUser(): Result<AuthUser, ExternalServiceError> {
   const user = firebase.auth.currentUser;
 
   if (!user) {
-    return null;
+    return Result.err(new ExternalServiceError({ msg: "no stored user found" }));
   }
 
-  return {
+  return Result.ok({
     userId: user.uid
-  }
+  });
 }
 
 export async function signout() {
