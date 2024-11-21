@@ -41,6 +41,14 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </Link>
+          <Link to="add-reminder">
+            <Card className="w-[200px] h-[200px]">
+              <CardContent className="h-full flex flex-col justify-center items-center gap-3">
+                <p>Add Reminder</p>
+                <CirclePlusIcon />
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </PageTransition>

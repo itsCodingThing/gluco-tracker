@@ -2,7 +2,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  ActivityIcon,
   CalendarIcon,
   PhoneIcon,
   UserPenIcon,
@@ -10,6 +9,7 @@ import {
 import { Link, useRouteLoaderData } from "react-router-dom";
 import { DashboardPageLoaderData } from "../dashboard/loader";
 import { useToast } from "@/hooks/use-toast";
+import { formatDate } from "@/lib/date";
 
 export default function ProfileCard() {
   const { toast } = useToast();
@@ -42,15 +42,11 @@ export default function ProfileCard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex items-center">
                 <CalendarIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-                <span>DOB: {profile.dob}</span>
+                <span>DOB: {formatDate(profile.dob, "dd-MMM-yyyy")}</span>
               </div>
               <div className="flex items-center">
                 <PhoneIcon className="w-4 h-4 mr-2 text-muted-foreground" />
                 <span>{profile.contact}</span>
-              </div>
-              <div className="flex items-center">
-                <ActivityIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-                <span>Blood Type: A+</span>
               </div>
             </div>
           </div>

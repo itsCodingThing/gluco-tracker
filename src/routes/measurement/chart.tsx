@@ -20,6 +20,32 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { DashboardPageLoaderData } from "../dashboard/loader";
 import { MeasurementPageLoaderData } from "./loader";
 import { formatDate } from "@/lib/date";
+import { Measurement } from "@/types/measurement";
+
+
+function Chart({ data }: { data: Measurement[] }) {
+  return (
+    <ChartContainer
+      config={{ type: { label: "type", color: "#2563eb" } }}
+      className="min-h-[200px] w-full"
+    >
+      <BarChart data={data}>
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="createdAt"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          minTickGap={32}
+          tickFormatter={(value) => {
+            return formatDate(value, "dd-MMM");
+          }}
+        />
+        <Bar dataKey="measurement" fill="black" radius={4} />
+      </BarChart>
+    </ChartContainer>
+  )
+}
 
 export default function MeasurementChart() {
   const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
@@ -65,31 +91,13 @@ export default function MeasurementChart() {
             {fetcher.data ? (
               <>
                 {fetcher.data.measurementByType.length ? (
-                  <ChartContainer
-                    config={{ type: { label: "type", color: "#2563eb" } }}
-                    className="min-h-[200px] w-full"
-                  >
-                    <BarChart data={fetcher.data.measurementByType}>
-                      <CartesianGrid vertical={false} />
-                      <XAxis
-                        dataKey="createdAt"
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        minTickGap={32}
-                        tickFormatter={(value) => {
-                          return formatDate(value, "dd-MMM");
-                        }}
-                      />
-                      <Bar dataKey="measurement" fill="red" radius={4} />
-                    </BarChart>
-                  </ChartContainer>
+                  <Chart data={fetcher.data.measurementByType} />
                 ) : (
                   <div className="text-center">no data available</div>
                 )}
               </>
             ) : (
-              <div className="text-center">select type</div>
+              <div className="text-center mt-2">Please select type</div>
             )}
           </>
         )}

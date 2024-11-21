@@ -22,8 +22,9 @@ export async function measurementLoader({ request }: LoaderFunctionArgs) {
     measurementByType = await getMeasurementByType(type);
   }
 
+  console.log(measurementByType)
   return defer({
-    measurements: getMeasurements(user.unwrap().userId),
+    measurements: getMeasurements(user.value.userId),
     measurementByType,
   });
 }

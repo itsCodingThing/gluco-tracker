@@ -37,6 +37,20 @@ const router = createBrowserRouter([
         },
       },
       {
+        path: "add-reminder",
+        lazy: async () => {
+          const AddReminderPage = await import(
+            "./routes/add-reminder/page"
+          );
+          const { addReminderAction } = await import("./routes/add-reminder/action");
+
+          return {
+            Component: AddReminderPage.default,
+            action: addReminderAction
+          };
+        },
+      },
+      {
         path: "profile",
         children: [
           {

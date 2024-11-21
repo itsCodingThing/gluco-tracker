@@ -20,7 +20,7 @@ import {
 import Loader from "@/components/loader";
 import { DashboardPageLoaderData } from "../dashboard/loader";
 
-export default function AddMeasurementPage() {
+export default function AddReminderPage() {
   const { profile } = useRouteLoaderData("root") as DashboardPageLoaderData;
   const navigation = useNavigation();
 
@@ -31,27 +31,11 @@ export default function AddMeasurementPage() {
           <ChevronLeftIcon />
         </Link>
         <h1 className="w-full text-center font-bold text-xl mb-3">
-          Add Measurement
+          Add Reminder
         </h1>
       </div>
       <Form method="post" className="grid grid-cols-4 gap-3">
-        <div className="col-span-4">
-          <Label htmlFor="measurement" className="text-left">
-            measurement
-          </Label>
-          <div className="flex w-full items-center space-x-2">
-            <Input
-              name="measurement"
-              id="measurement"
-              placeholder="00.00"
-              inputMode="numeric"
-              required
-              autoComplete="off"
-            />
-            <span>mg/dL</span>
-          </div>
-        </div>
-        <div className="col-span-4">
+        <div className="col-span-2">
           <Label htmlFor="dosage" className="text-left">
             dosage
           </Label>
@@ -67,7 +51,7 @@ export default function AddMeasurementPage() {
             <span>ml</span>
           </div>
         </div>
-        <div className="col-span-4">
+        <div className="col-span-2">
           <Label htmlFor="date" className="text-left">
             date
           </Label>

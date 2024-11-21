@@ -115,3 +115,7 @@ export async function getMeasurementDetailsByUserId(userId: string) {
   const data = docSnaps.docs[0].data() as MeasurementDetails;
   return data;
 }
+
+export async function addMeasurementReminder(payload: Omit<MeasurementPayload, "measurement">) {
+  console.log(payload)
+}

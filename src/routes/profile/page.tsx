@@ -18,28 +18,7 @@ export default function ProfilePage() {
         <Suspense fallback={<Loader />}>
           <ProfileCard />
         </Suspense>
-
         <ProfileTab />
-
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
-        {/*   <Card> */}
-        {/*     <CardHeader> */}
-        {/*       <CardTitle>Emergency Contact</CardTitle> */}
-        {/*     </CardHeader> */}
-        {/*     <CardContent> */}
-        {/*       <p> */}
-        {/*         <strong>Name:</strong> Jane Doe */}
-        {/*       </p> */}
-        {/*       <p> */}
-        {/*         <strong>Relationship:</strong> Spouse */}
-        {/*       </p> */}
-        {/*       <p> */}
-        {/*         <strong>Phone:</strong> +1 (555) 987-6543 */}
-        {/*       </p> */}
-        {/*     </CardContent> */}
-        {/*   </Card> */}
-        {/* </div> */}
-
         <div className="flex justify-end space-x-4">
           <Button
             onClick={async () => {
